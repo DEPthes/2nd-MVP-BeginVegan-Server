@@ -23,10 +23,10 @@ public class Food extends BaseEntity {
 
     private VeganType veganType;
 
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "food")
     private List<FoodIngredient> ingredients;
 
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "food")
     private List<Block> foodBlocks;
 
     @Builder

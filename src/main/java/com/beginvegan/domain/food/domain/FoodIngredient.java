@@ -1,10 +1,7 @@
 package com.beginvegan.domain.food.domain;
 
 import com.beginvegan.domain.common.BaseEntity;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -19,6 +16,10 @@ public class FoodIngredient extends BaseEntity {
     private Long id;
 
     private String name;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "food_id")
+    private Food food;
 
     @Builder
     public FoodIngredient(Long id, String name) {

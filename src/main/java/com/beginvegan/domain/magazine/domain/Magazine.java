@@ -22,7 +22,7 @@ public class Magazine extends BaseEntity {
 
     private String editor;
 
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "magazine")
     private List<Block> magazineBlocks;
 
     @Builder
