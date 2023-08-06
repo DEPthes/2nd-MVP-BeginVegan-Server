@@ -27,8 +27,8 @@ jobs:
           cd ./src/main/resources
           sudo mkdir database/
           cd database
-          touch ./application-database.yml
-          echo "${{ secrets.DATABASE_YML }}" >> ./application-database.yml
+          sudo touch ./application-database.yml
+          sudo echo "${{ secrets.DATABASE_YML }}" >> ./application-database.yml
         shell: bash
 
       ## create application-oauth2.yml
@@ -37,8 +37,8 @@ jobs:
           cd ./src/main/resources
           sudo mkdir oauth2/
           cd oauth2
-          touch ./application-oauth2.yml
-          echo "${{ secrets.OAUTH2_YML }}" >> ./application-oauth2.yaml
+          sudo touch ./application-oauth2.yml
+          sudo echo "${{ secrets.OAUTH2_YML }}" >> ./application-oauth2.yaml
         shell: bash
 
       # 2. Spring Boot 애플리케이션 빌드
