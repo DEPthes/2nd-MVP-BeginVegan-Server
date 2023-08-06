@@ -22,26 +22,15 @@ jobs:
           distribution: 'temurin'
 
       ## create application-database.yaml
-      - name: make application-database.yml
+      - name: create application.properties file
         run: |
-          cd ./src/main/resources
-          sudo mkdir database/
-          cd database
-          sudo touch ./application-database.yml
-          chmod 666 ./application-database.yml
-          echo "${{ secrets.DATABASE_YML }}" >> ./application-database.yml
-        shell: bash
-
-      ## create application-oauth2.yml
-      - name: make application-oauth2.yml
-        run: |
-          cd ./src/main/resources
-          sudo mkdir oauth2/
-          cd oauth2
-          sudo touch ./application-oauth2.yml
-          chmod 666 ./application-oauth2.yml
-          echo "${{ secrets.OAUTH2_YML }}" >> ./application-oauth2.yaml
-        shell: bash
+          mkdir ./src/main/resources/database
+          touch ./src/main/resources/database/application-database.yml
+          echo "${{ secrets.DATABASE_YML }}" >> src/main/resources/database/application-database.yml
+          
+          mkdir ./src/main/resources/oauth2
+          touch ./src/main/resources/oauth2/application-oauth2.yml
+          echo "${{ secrets.OAUTH2_YML }}" >> src/main/resources/auth/application-oauth2.yml
 
       # 2. Spring Boot 애플리케이션 빌드
       - name: Build with Gradle
