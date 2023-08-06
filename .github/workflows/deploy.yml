@@ -21,6 +21,26 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
+      ## create application-database.yaml
+      - name: make application-database.yml
+        run: |
+          cd ./src/main/resources
+          mkdir /database
+          cd ./src/main/resources/database
+          touch ./application-database.yml
+          echo "${{ secrets.DATABASE_YML }}" >> ./application-database.yaml
+        shell: bash
+
+      ## create application-oauth2.yml
+      - name: make application-oauth2.yml
+        run: |
+          cd ./src/main/resources
+          mkdir /oauth2
+          cd ./src/main/resources/oauth2
+          touch ./application-oauth2.yml
+          echo "${{ secrets.OAUTH2_YML }}" >> ./application-oauth2.yaml
+        shell: bash
+
       # 2. Spring Boot 애플리케이션 빌드
       - name: Build with Gradle
         uses: gradle/gradle-build-action@67421db6bd0bf253fb4bd25b31ebb98943c375e1
@@ -29,7 +49,7 @@ jobs:
 
       # 3. Docker 이미지 빌드
       - name: docker image build
-        run: docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/github-actions-demo .
+        run: docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/beginvegan .
 
       # 4. DockerHub 로그인
       - name: docker login
@@ -40,7 +60,7 @@ jobs:
 
       # 5. Docker Hub 이미지 푸시
       - name: docker Hub push
-        run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/github-actions-demo
+        run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/beginvegan
 
   run-docker-image-on-ec2:
     needs: build-docker-image
@@ -49,7 +69,7 @@ jobs:
     steps:
       # 1. 최신 이미지를 풀받습니다
       - name: docker pull
-        run: sudo docker pull ${{ secrets.DOCKERHUB_USERNAME }}/github-actions-demo
+        run: sudo docker pull ${{ secrets.DOCKERHUB_USERNAME }}/beginvegan
 
       # 2. 기존의 컨테이너를 중지시킵니다
       - name: docker stop container
@@ -57,7 +77,7 @@ jobs:
 
       # 3. 최신 이미지를 컨테이너화하여 실행시킵니다
       - name: docker run new container
-        run: sudo docker run --name github-actions-demo --rm -d -p 80:8080 ${{ secrets.DOCKERHUB_USERNAME }}/github-actions-demo
+        run: sudo docker run --name github-actions-demo --rm -d -p 80:8080 ${{ secrets.DOCKERHUB_USERNAME }}/beginvegan
 
       # 4. 미사용 이미지를 정리합니다
       - name: delete old docker image
