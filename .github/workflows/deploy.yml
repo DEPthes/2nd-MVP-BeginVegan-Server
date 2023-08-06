@@ -25,7 +25,7 @@ jobs:
       - name: make application-database.yml
         run: |
           cd ./src/main/resources
-          sudo mkdir database
+          sudo mkdir database/
           cd ./src/main/resources/database
           touch ./application-database.yml
           echo "${{ secrets.DATABASE_YML }}" >> ./application-database.yaml
@@ -35,7 +35,7 @@ jobs:
       - name: make application-oauth2.yml
         run: |
           cd ./src/main/resources
-          sudo mkdir oauth2
+          sudo mkdir oauth2/
           cd ./src/main/resources/oauth2
           touch ./application-oauth2.yml
           echo "${{ secrets.OAUTH2_YML }}" >> ./application-oauth2.yaml
