@@ -23,6 +23,8 @@ public class Food extends BaseEntity {
 
     private VeganType veganType;
 
+    private String description;
+
     @OneToMany(mappedBy = "food")
     private List<FoodIngredient> ingredients;
 
@@ -30,10 +32,11 @@ public class Food extends BaseEntity {
     private List<Block> foodBlocks;
 
     @Builder
-    public Food(Long id, String name, VeganType veganType, List<FoodIngredient> ingredients, List<Block> foodBlocks) {
+    public Food(Long id, String name, VeganType veganType, String description, List<FoodIngredient> ingredients, List<Block> foodBlocks) {
         this.id = id;
         this.name = name;
         this.veganType = veganType;
+        this.description = description;
         this.ingredients = ingredients;
         this.foodBlocks = foodBlocks;
     }
