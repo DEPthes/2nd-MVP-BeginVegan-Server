@@ -2,10 +2,7 @@ package com.beginvegan.domain.auth.domain;
 
 import com.beginvegan.domain.common.BaseEntity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -17,10 +14,11 @@ import lombok.NoArgsConstructor;
 public class Token extends BaseEntity {
 
     @Id
-    @Column(name = "user_email", length = 1024 , nullable = false)
+    @Column(name = "user_email" ,nullable = false)
     private String userEmail;
 
-    @Column(name = "refresh_token", length = 1024 , nullable = false)
+    @Lob
+    @Column(name = "refresh_token", nullable = false)
     private String refreshToken;
 
     public Token updateRefreshToken(String refreshToken) {

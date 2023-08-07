@@ -22,7 +22,7 @@ jobs:
           distribution: 'temurin'
 
       ## create application-database.yaml
-      - name: create application.properties file
+      - name: create application.yml file
         run: |
           mkdir ./src/main/resources/database
           touch ./src/main/resources/database/application-database.yml
