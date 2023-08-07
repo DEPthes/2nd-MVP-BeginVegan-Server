@@ -21,6 +21,9 @@ public class Block extends BaseEntity {
 
     private Integer sequence;
 
+    // content가 이미지일 시 필요
+    private String imageSource;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "magazine_id")
     private Magazine magazine;
@@ -30,10 +33,11 @@ public class Block extends BaseEntity {
     private Food food;
 
     @Builder
-    public Block(Long id, String content, Integer sequence) {
+    public Block(Long id, String content, Integer sequence, String imageSource) {
         this.id = id;
         this.content = content;
         this.sequence = sequence;
+        this.imageSource = imageSource;
     }
 
 }
