@@ -8,6 +8,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -23,7 +24,7 @@ public class Magazine extends BaseEntity {
     private String editor;
 
     @OneToMany(mappedBy = "magazine")
-    private List<Block> magazineBlocks;
+    private List<Block> magazineBlocks = new ArrayList<>();
 
     @Builder
     public Magazine(Long id, String title, String editor, List<Block> magazineBlocks) {
