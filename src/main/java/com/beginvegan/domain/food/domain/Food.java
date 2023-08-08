@@ -9,6 +9,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -26,10 +27,10 @@ public class Food extends BaseEntity {
     private String description;
 
     @OneToMany(mappedBy = "food")
-    private List<FoodIngredient> ingredients;
+    private List<FoodIngredient> ingredients = new ArrayList<>();
 
     @OneToMany(mappedBy = "food")
-    private List<Block> foodBlocks;
+    private List<Block> foodBlocks = new ArrayList<>();
 
     @Builder
     public Food(Long id, String name, VeganType veganType, String description, List<FoodIngredient> ingredients, List<Block> foodBlocks) {

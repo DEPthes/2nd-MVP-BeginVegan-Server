@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -37,7 +38,7 @@ public class Restaurant extends BaseEntity {
     private String imageSource;
 
     @OneToMany(mappedBy = "restaurant")
-    List<Menu> menus;
+    List<Menu> menus = new ArrayList<>();
 
     @Builder
     public Restaurant(Long id, String name, String businessHours, String contactNumber, Address address, String latitude, String longitude, String kakaoMapUrl, String imageUrl, String imageSource, List<Menu> menus) {
@@ -53,4 +54,5 @@ public class Restaurant extends BaseEntity {
         this.imageSource = imageSource;
         this.menus = menus;
     }
+
 }
