@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 public class Token extends BaseEntity {
 
     @Id
-    @Column(name = "user_email", nullable = false)
+    @Column(name = "user_email" ,nullable = false)
     private String userEmail;
 
     @Lob
