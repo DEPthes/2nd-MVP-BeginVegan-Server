@@ -32,11 +32,15 @@ public class Restaurant extends BaseEntity {
 
     private String kakaoMapUrl;
 
+    private String imageUrl;
+
+    private String imageSource;
+
     @OneToMany(mappedBy = "restaurant")
     List<Menu> menus;
 
     @Builder
-    public Restaurant(Long id, String name, String businessHours, String contactNumber, Address address, String latitude, String longitude, String kakaoMapUrl, List<Menu> menus) {
+    public Restaurant(Long id, String name, String businessHours, String contactNumber, Address address, String latitude, String longitude, String kakaoMapUrl, String imageUrl, String imageSource, List<Menu> menus) {
         this.id = id;
         this.name = name;
         this.businessHours = businessHours;
@@ -45,7 +49,8 @@ public class Restaurant extends BaseEntity {
         this.latitude = latitude;
         this.longitude = longitude;
         this.kakaoMapUrl = kakaoMapUrl;
+        this.imageUrl = imageUrl;
+        this.imageSource = imageSource;
         this.menus = menus;
     }
-
 }
