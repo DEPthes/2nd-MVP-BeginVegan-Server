@@ -33,4 +33,5 @@ public class FoodController {
     public ResponseEntity<?> findThreeFoods(){
         return foodService.findThreeFoods();
     }
+  
 }

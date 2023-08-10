@@ -33,11 +33,13 @@ public class Block extends BaseEntity {
     private Food food;
 
     @Builder
-    public Block(Long id, String content, Integer sequence, String imageSource) {
+    public Block(Long id, String content, Integer sequence, String imageSource, Magazine magazine, Food food) {
         this.id = id;
         this.content = content;
         this.sequence = sequence;
         this.imageSource = imageSource;
+        this.magazine = magazine;
+        this.food = food;
     }
 
 }
