@@ -35,4 +35,5 @@ public class FoodController {
     public ResponseEntity<?> findFoodDetail(@RequestBody FoodDetailReq foodDetailReq) { // @RequestParam Long id
         return foodService.findFoodDetail(foodDetailReq);
     }
+  
 }

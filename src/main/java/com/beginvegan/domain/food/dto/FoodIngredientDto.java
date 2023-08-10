@@ -5,7 +5,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Data
 public class FoodIngredientDto {
 
@@ -18,4 +17,5 @@ public class FoodIngredientDto {
         this.id = id;
         this.name = name;
     }
+  
 }
