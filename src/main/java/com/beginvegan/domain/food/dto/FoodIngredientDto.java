@@ -1,7 +1,9 @@
 package com.beginvegan.domain.food.dto;
 
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 public class FoodIngredientDto {
@@ -15,4 +17,5 @@ public class FoodIngredientDto {
         this.id = id;
         this.name = name;
     }
+  
 }
