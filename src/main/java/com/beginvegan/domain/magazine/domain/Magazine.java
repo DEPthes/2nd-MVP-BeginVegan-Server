@@ -23,14 +23,17 @@ public class Magazine extends BaseEntity {
 
     private String editor;
 
+    private MagazineType magazineType;
+
     @OneToMany(mappedBy = "magazine")
     private List<Block> magazineBlocks = new ArrayList<>();
 
     @Builder
-    public Magazine(Long id, String title, String editor, List<Block> magazineBlocks) {
+    public Magazine(Long id, String title, String editor, MagazineType magazineType, List<Block> magazineBlocks) {
         this.id = id;
         this.title = title;
         this.editor = editor;
+        this.magazineType = magazineType;
         this.magazineBlocks = magazineBlocks;
     }
 
