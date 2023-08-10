@@ -1,6 +1,7 @@
 package com.beginvegan.domain.magazine.application;
 
 import com.beginvegan.domain.magazine.domain.Magazine;
+import com.beginvegan.domain.magazine.domain.MagazineType;
 import com.beginvegan.domain.magazine.domain.repository.MagazineRepository;
 import com.beginvegan.domain.magazine.dto.response.MagazineListRes;
 import lombok.RequiredArgsConstructor;
@@ -18,24 +19,33 @@ public class MagazineService {
     // 2가지 매거진 랜덤 조회 : 메인 페이지
     public ResponseEntity<?> findTwoMagazines() {
         List<Magazine> magazines = magazineRepository.findAll();
-        List<MagazineListRes> magazineList = new ArrayList<MagazineListRes>();
+        List<Magazine> magazines_meaning = magazineRepository.findAllByMagazineType(MagazineType.VEGAN_MEANING);
+        List<Magazine> magazines_type = magazineRepository.findAllByMagazineType(MagazineType.VEGAN_TYPE);
 
-        // 랜덤 수 2개 추리기
-        Set<Integer> randomNum = new HashSet<>();
-        while(randomNum.size() < 2){
-            randomNum.add((int)(Math.random() * magazines.size()));
-        }
+        // 랜덤 수 1개씩 추리기 :: 비건 정의 1, 비건 종류 1
+        int randomNum_meaning = (int)(Math.random() * magazines_meaning.size());
+        int randomNum_type = (int)(Math.random() * magazines_type.size());
 
-        Iterator<Integer> iter = randomNum.iterator();
-        while(iter.hasNext()){
-            int num = iter.next();
-            MagazineListRes magazineListRes = MagazineListRes.builder()
-                    .id(magazines.get(num).getId())
-                    .title(magazines.get(num).getTitle())
-                    .editor(magazines.get(num).getEditor())
-                    .build();
-            magazineList.add(magazineListRes);
-        }
+        Magazine magazine_meaning = magazines_meaning.get(randomNum_meaning);
+        Magazine magazine_type = magazines_type.get(randomNum_type);
+
+        List<MagazineListRes> magazineList = new ArrayList<>();
+
+        MagazineListRes magazineListRes = MagazineListRes.builder()
+                .id(magazine_meaning.getId())
+                .title(magazine_meaning.getTitle())
+                .editor(magazine_meaning.getEditor())
+                .magazineType(magazine_meaning.getMagazineType())
+                .build();
+        magazineList.add(magazineListRes);
+
+        magazineListRes = MagazineListRes.builder()
+                .id(magazine_type.getId())
+                .title(magazine_type.getTitle())
+                .editor(magazine_type.getEditor())
+                .magazineType(magazine_type.getMagazineType())
+                .build();
+        magazineList.add(magazineListRes);
 
         return ResponseEntity.ok(magazineList);
     }
