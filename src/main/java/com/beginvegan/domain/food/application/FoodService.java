@@ -9,6 +9,7 @@ import com.beginvegan.domain.food.dto.request.FoodDetailReq;
 import com.beginvegan.domain.food.dto.response.FoodDetailRes;
 import com.beginvegan.domain.food.dto.response.FoodListRes;
 import com.beginvegan.domain.food.exception.FoodNotFoundException;
+import com.beginvegan.global.payload.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -47,7 +48,12 @@ public class FoodService {
             foodDtos.add(foodRecipeListRes);
         }
 
-        return ResponseEntity.ok(foodDtos);
+        ApiResponse apiResponse = ApiResponse.builder()
+                .check(true)
+                .information(foodDtos)
+                .build();
+
+        return ResponseEntity.ok(apiResponse);
     }
 
     // food_id를 통한 레시피 검색
@@ -79,7 +85,12 @@ public class FoodService {
                 .blocks(blockDtos)
                 .build();
 
-        return ResponseEntity.ok(foodDetailRes);
+        ApiResponse apiResponse = ApiResponse.builder()
+                .check(true)
+                .information(foodDetailRes)
+                .build();
+
+        return ResponseEntity.ok(apiResponse);
 
     }
 
@@ -106,7 +117,12 @@ public class FoodService {
             foodList.add(foodListRes);
         }
 
-        return ResponseEntity.ok(foodList);
+        ApiResponse apiResponse = ApiResponse.builder()
+                .check(true)
+                .information(foodList)
+                .build();
+
+        return ResponseEntity.ok(apiResponse);
     }
 
 }
