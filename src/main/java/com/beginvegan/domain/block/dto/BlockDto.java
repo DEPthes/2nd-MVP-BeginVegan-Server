@@ -15,14 +15,13 @@ public class BlockDto {
 
     private Integer sequence;
 
-    // content가 이미지일 시 필요
-    private String imageSource;
+    private String source;
 
     @Builder
-    public BlockDto(Long id, String content, Integer sequence, String imageSource) {
+    public BlockDto(Long id, String content, Integer sequence, String source) {
         this.id = id;
         this.content = content;
         this.sequence = sequence;
-        this.imageSource = imageSource;
+        this.source = source;
     }
 }
