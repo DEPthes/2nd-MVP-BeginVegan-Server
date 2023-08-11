@@ -4,7 +4,7 @@ import com.beginvegan.domain.block.dto.BlockDto;
 import com.beginvegan.domain.food.domain.Food;
 import com.beginvegan.domain.food.domain.repository.FoodRepository;
 import com.beginvegan.domain.food.dto.FoodIngredientDto;
-import com.beginvegan.domain.food.dto.FoodRecipeListRes;
+import com.beginvegan.domain.food.dto.response.FoodRecipeListRes;
 import com.beginvegan.domain.food.dto.request.FoodDetailReq;
 import com.beginvegan.domain.food.dto.response.FoodDetailRes;
 import com.beginvegan.domain.food.dto.response.FoodListRes;

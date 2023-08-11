@@ -1,7 +1,7 @@
 package com.beginvegan.domain.food.presentation;
 
 import com.beginvegan.domain.food.application.FoodService;
-import com.beginvegan.domain.food.dto.FoodRecipeListRes;
+import com.beginvegan.domain.food.dto.response.FoodRecipeListRes;
 import com.beginvegan.domain.food.dto.request.FoodDetailReq;
 import com.beginvegan.domain.food.dto.response.FoodDetailRes;
 import com.beginvegan.domain.food.dto.response.FoodListRes;

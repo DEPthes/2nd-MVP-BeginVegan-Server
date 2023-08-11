@@ -1,5 +1,6 @@
-package com.beginvegan.domain.food.dto;
+package com.beginvegan.domain.food.dto.response;
 
+import com.beginvegan.domain.food.dto.FoodIngredientDto;
 import com.beginvegan.domain.user.domain.VeganType;
 import lombok.Builder;
 import lombok.Data;
