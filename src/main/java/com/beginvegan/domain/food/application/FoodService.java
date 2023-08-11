@@ -75,8 +75,8 @@ public class FoodService {
                 .id(food.getId())
                 .name(food.getName())
                 .veganType(food.getVeganType())
-                .ingredientDtos(ingredientDtos)
-                .blockDtos(blockDtos)
+                .ingredients(ingredientDtos)
+                .blocks(blockDtos)
                 .build();
 
         return ResponseEntity.ok(foodDetailRes);

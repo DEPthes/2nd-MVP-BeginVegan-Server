@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Data
 public class FoodDetailRes {
 
