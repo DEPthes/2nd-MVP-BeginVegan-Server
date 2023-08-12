@@ -38,4 +38,17 @@ public class RestaurantController {
         return restaurantService.findRestaurantById(restaurantId);
     }
 
+    @Operation(summary = "식당/카페 리뷰 조희", description = "식당/카페 리뷰를 조희합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "식당/카페 리뷰 조회 성공", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ReviewListRes.class)) } ),
+            @ApiResponse(responseCode = "400", description = "식당/카페 리뷰 조회 실패", content = { @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class) ) } ),
+    })
+    @GetMapping("/review/{restaurant-id}")
+    public ResponseEntity<?> findRestaurantReviewsById(
+            @Parameter(description = "식당/카페ID로 리뷰를 조회합니다.", required = true) @PathVariable(value = "restaurant-id") Long restaurantId,
+            @Parameter(description = "식당/카페의 리뷰 목록을 페이지별로 조회합니다. **Page는 0부터 시작합니다!**", required = true) @RequestParam(value = "page") Integer page
+    ) {
+        return restaurantService.findRestaurantReviewsById(restaurantId, page);
+    }
+
 }
