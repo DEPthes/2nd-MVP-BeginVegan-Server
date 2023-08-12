@@ -35,6 +35,8 @@ public class User extends BaseEntity {
 
     private String password;
 
+    private Boolean marketingConsent;
+
     @Enumerated(EnumType.STRING)
     private VeganType veganType;
 
@@ -47,13 +49,14 @@ public class User extends BaseEntity {
     private String providerId;
 
     @Builder
-    public User(Long id, String name, String email, String imageUrl, Boolean emailVerified, String password, VeganType veganType, Provider provider, Role role, String providerId) {
+    public User(Long id, String name, String email, String imageUrl, Boolean emailVerified, String password, Boolean marketingConsent, VeganType veganType, Provider provider, Role role, String providerId) {
         this.id = id;
         this.name = name;
         this.email = email;
         this.imageUrl = imageUrl;
         this.emailVerified = emailVerified;
         this.password = password;
+        this.marketingConsent = marketingConsent;
         this.veganType = veganType;
         this.provider = provider;
         this.role = role;
@@ -70,6 +73,10 @@ public class User extends BaseEntity {
 
     public void updateVeganType(VeganType veganType) {
         this.veganType = veganType;
+    }
+
+    public void updateMarketingConsent(Boolean marketingConsent) {
+        this.marketingConsent = marketingConsent;
     }
 
 }
