@@ -35,7 +35,7 @@ public class BookmarkController {
     @GetMapping
     public ResponseEntity<?> findBookmarksByUser(
             @Parameter(description = "Accesstoken을 입력해주세요.", required = true) @CurrentUser UserPrincipal userPrincipal,
-            @Parameter(description = "유저의 스크랩 목록을 페이지별로 조회합니다.", required = true) @RequestParam(value = "page") Integer page
+            @Parameter(description = "유저의 스크랩 목록을 페이지별로 조회합니다. **Page는 0부터 시작합니다!**", required = true) @RequestParam(value = "page") Integer page
     ) {
         return bookmarkService.findBookmarksByUser(userPrincipal, page);
     }
