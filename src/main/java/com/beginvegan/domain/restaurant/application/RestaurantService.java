@@ -1,5 +1,8 @@
 package com.beginvegan.domain.restaurant.application;
 
+import com.beginvegan.domain.bookmark.domain.Bookmark;
+import com.beginvegan.domain.bookmark.domain.repository.BookmarkRepository;
+import com.beginvegan.domain.bookmark.exception.ExistsBookmarkException;
 import com.beginvegan.domain.restaurant.domain.Restaurant;
 import com.beginvegan.domain.restaurant.domain.repository.MenuRepository;
 import com.beginvegan.domain.restaurant.domain.repository.RestaurantRepository;
@@ -12,8 +15,12 @@ import com.beginvegan.domain.review.domain.repository.ReviewRepository;
 import com.beginvegan.domain.review.dto.RestaurantReviewDetailRes;
 import com.beginvegan.domain.review.dto.ReviewDetailRes;
 import com.beginvegan.domain.review.dto.ReviewListRes;
+import com.beginvegan.domain.user.domain.User;
+import com.beginvegan.domain.user.domain.repository.UserRepository;
+import com.beginvegan.domain.user.exception.InvalidUserException;
 import com.beginvegan.global.config.security.token.UserPrincipal;
 import com.beginvegan.global.payload.ApiResponse;
+import com.beginvegan.global.payload.Message;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -31,6 +38,8 @@ public class RestaurantService {
 
     private final RestaurantRepository restaurantRepository;
     private final ReviewRepository reviewRepository;
+    private final UserRepository userRepository;
+    private final BookmarkRepository bookmarkRepository;
 
     public ResponseEntity<?> findRestaurantById(Long restaurantId) {
         Restaurant restaurant = restaurantRepository.findRestaurantById(restaurantId)
@@ -79,4 +88,31 @@ public class RestaurantService {
 
         return ResponseEntity.ok(apiResponse);
     }
+
+    @Transactional
+    public ResponseEntity<?> scrapRestaurant(UserPrincipal userPrincipal, Long restaurantId) {
+        User user = userRepository.findById(userPrincipal.getId())
+                .orElseThrow(InvalidUserException::new);
+        Restaurant restaurant = restaurantRepository.findById(restaurantId)
+                .orElseThrow(InvalidRestaurantException::new);
+
+        if (bookmarkRepository.existsBookmarkByUserAndRestaurant(user, restaurant)) {
+            throw new ExistsBookmarkException();
+        }
+
+        Bookmark bookmark = Bookmark.builder()
+                .user(user)
+                .restaurant(restaurant)
+                .build();
+
+        bookmarkRepository.save(bookmark);
+
+        ApiResponse apiResponse = ApiResponse.builder()
+                .check(true)
+                .information(Message.builder().message("스크랩 되었습니다.").build())
+                .build();
+
+        return ResponseEntity.ok(apiResponse);
+    }
+
 }
