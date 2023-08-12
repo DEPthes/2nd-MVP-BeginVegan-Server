@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Data
 public class FoodDetailRes {
 
@@ -20,16 +19,16 @@ public class FoodDetailRes {
 
     private VeganType veganType;
 
-    private List<FoodIngredientDto> ingredientDtos;
+    private List<FoodIngredientDto> ingredients;
 
-    private List<BlockDto> blockDtos;
+    private List<BlockDto> blocks;
 
     @Builder
-    public FoodDetailRes(Long id, String name, VeganType veganType, List<FoodIngredientDto> ingredientDtos, List<BlockDto> blockDtos) {
+    public FoodDetailRes(Long id, String name, VeganType veganType, List<FoodIngredientDto> ingredients, List<BlockDto> blocks) {
         this.id = id;
         this.name = name;
         this.veganType = veganType;
-        this.ingredientDtos = ingredientDtos;
-        this.blockDtos = blockDtos;
+        this.ingredients = ingredients;
+        this.blocks = blocks;
     }
 }

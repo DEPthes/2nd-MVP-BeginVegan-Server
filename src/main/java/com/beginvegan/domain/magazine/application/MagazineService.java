@@ -4,6 +4,7 @@ import com.beginvegan.domain.magazine.domain.Magazine;
 import com.beginvegan.domain.magazine.domain.MagazineType;
 import com.beginvegan.domain.magazine.domain.repository.MagazineRepository;
 import com.beginvegan.domain.magazine.dto.response.MagazineListRes;
+import com.beginvegan.global.payload.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -47,6 +48,11 @@ public class MagazineService {
                 .build();
         magazineList.add(magazineListRes);
 
-        return ResponseEntity.ok(magazineList);
+        ApiResponse apiResponse = ApiResponse.builder()
+                .check(true)
+                .information(magazineList)
+                .build();
+
+        return ResponseEntity.ok(apiResponse);
     }
 }
