@@ -8,10 +8,10 @@ import java.util.List;
 @Data
 public class ReviewListRes {
 
-    List<ReviewDetailRes> reviews;
+    List<?> reviews;
 
     @Builder
-    public ReviewListRes(List<ReviewDetailRes> reviews) {
+    public ReviewListRes(List<?> reviews) {
         this.reviews = reviews;
     }
 
