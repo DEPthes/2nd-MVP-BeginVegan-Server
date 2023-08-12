@@ -1,8 +1,7 @@
-package com.beginvegan.domain.review.presentation;
+package com.beginvegan.domain.bookmark.presentation;
 
+import com.beginvegan.domain.bookmark.application.BookmarkService;
 import com.beginvegan.domain.food.dto.response.FoodRecipeListRes;
-import com.beginvegan.domain.review.application.ReviewService;
-import com.beginvegan.domain.review.dto.ReviewDetailRes;
 import com.beginvegan.global.config.security.token.CurrentUser;
 import com.beginvegan.global.config.security.token.UserPrincipal;
 import com.beginvegan.global.payload.ErrorResponse;
@@ -20,25 +19,24 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-@Tag(name = "Reviews", description = "Reviews API")
+@Tag(name = "Bookmarks", description = "Bookmarks API")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/reviews")
-public class ReviewController {
+@RequestMapping("/api/v1/bookmarks")
+public class BookmarkController {
 
-    private final ReviewService reviewService;
+    private final BookmarkService bookmarkService;
 
-    @Operation(summary = "유저의 리뷰 조희", description = "유저의 리뷰들을 최신순으로 가져옵니다.")
+    @Operation(summary = "유저의 스크랩 조희", description = "유저의 스크랩을 가져옵니다.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "유저 리뷰 목록 조회 성공", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ReviewDetailRes.class)) } ),
-            @ApiResponse(responseCode = "400", description = "유저 리뷰 목록 조회 실패", content = { @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class) ) } ),
+            @ApiResponse(responseCode = "200", description = "유저 스크랩 목록 조회 성공", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = FoodRecipeListRes.class)) } ),
+            @ApiResponse(responseCode = "400", description = "유저 스크랩 목록 조회 실패", content = { @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class) ) } ),
     })
     @GetMapping
-    public ResponseEntity<?> findReviewsByUser(
+    public ResponseEntity<?> findBookmarksByUser(
             @Parameter(description = "Accesstoken을 입력해주세요.", required = true) @CurrentUser UserPrincipal userPrincipal,
-            @Parameter(description = "유저의 리뷰 목록을 페이지별로 조회합니다.", required = true) @RequestParam(value = "page") Integer page
+            @Parameter(description = "유저의 스크랩 목록을 페이지별로 조회합니다.", required = true) @RequestParam(value = "page") Integer page
     ) {
-        return reviewService.findReviewsByUser(userPrincipal, page);
+        return bookmarkService.findBookmarksByUser(userPrincipal, page);
     }
-
 }

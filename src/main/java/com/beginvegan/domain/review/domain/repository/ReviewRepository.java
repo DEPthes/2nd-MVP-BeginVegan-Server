@@ -10,6 +10,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface ReviewRepository extends JpaRepository<Review, Long> {
 
     @EntityGraph(attributePaths = {"restaurant", "user"})
-    Page<Review> findByUser(User user, Pageable pageable);
+    Page<Review> findReviewsByUser(User user, Pageable pageable);
 
 }

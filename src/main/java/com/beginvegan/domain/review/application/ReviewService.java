@@ -33,11 +33,11 @@ public class ReviewService {
                 .orElseThrow(InvalidUserException::new);
 
         PageRequest pageRequest = PageRequest.of(page, 10, Sort.by(Sort.Direction.DESC, "date"));
-        Page<Review> reviewPage = reviewRepository.findByUser(user, pageRequest);
+        Page<Review> reviewPage = reviewRepository.findReviewsByUser(user, pageRequest);
 
         List<Review> reviews = reviewPage.getContent();
 
-        List<ReviewDetailRes> reviewDetailRes = reviews.stream()
+        List<ReviewDetailRes> reviewDetailResList = reviews.stream()
                 .map(review -> ReviewDetailRes.builder()
                         .id(review.getId())
                         .content(review.getContent())
@@ -49,7 +49,7 @@ public class ReviewService {
 
         ApiResponse apiResponse = ApiResponse.builder()
                 .check(true)
-                .information(reviewDetailRes)
+                .information(reviewDetailResList)
                 .build();
 
         return ResponseEntity.ok(apiResponse);
