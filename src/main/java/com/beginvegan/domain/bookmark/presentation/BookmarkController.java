@@ -1,6 +1,7 @@
 package com.beginvegan.domain.bookmark.presentation;
 
 import com.beginvegan.domain.bookmark.application.BookmarkService;
+import com.beginvegan.domain.bookmark.dto.BookmarkListRes;
 import com.beginvegan.domain.food.dto.response.FoodRecipeListRes;
 import com.beginvegan.global.config.security.token.CurrentUser;
 import com.beginvegan.global.config.security.token.UserPrincipal;
@@ -29,7 +30,7 @@ public class BookmarkController {
 
     @Operation(summary = "유저의 스크랩 조희", description = "유저의 스크랩을 가져옵니다.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "유저 스크랩 목록 조회 성공", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = FoodRecipeListRes.class)) } ),
+            @ApiResponse(responseCode = "200", description = "유저 스크랩 목록 조회 성공", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = BookmarkListRes.class)) } ),
             @ApiResponse(responseCode = "400", description = "유저 스크랩 목록 조회 실패", content = { @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class) ) } ),
     })
     @GetMapping
