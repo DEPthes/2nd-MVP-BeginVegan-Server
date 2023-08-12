@@ -26,6 +26,8 @@ public class Food extends BaseEntity {
 
     private String description;
 
+    private String source;
+
     @OneToMany(mappedBy = "food")
     private List<FoodIngredient> ingredients = new ArrayList<>();
 
@@ -33,11 +35,12 @@ public class Food extends BaseEntity {
     private List<Block> foodBlocks = new ArrayList<>();
 
     @Builder
-    public Food(Long id, String name, VeganType veganType, String description, List<FoodIngredient> ingredients, List<Block> foodBlocks) {
+    public Food(Long id, String name, VeganType veganType, String description, String source, List<FoodIngredient> ingredients, List<Block> foodBlocks) {
         this.id = id;
         this.name = name;
         this.veganType = veganType;
         this.description = description;
+        this.source = source;
         this.ingredients = ingredients;
         this.foodBlocks = foodBlocks;
     }

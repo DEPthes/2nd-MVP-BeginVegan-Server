@@ -73,7 +73,6 @@ public class FoodService {
                         .id(block.getId())
                         .content(block.getContent())
                         .sequence(block.getSequence())
-                        .source(block.getSource())
                         .build())
                 .collect(Collectors.toList());
 
@@ -81,6 +80,7 @@ public class FoodService {
                 .id(food.getId())
                 .name(food.getName())
                 .veganType(food.getVeganType())
+                .source(food.getSource())
                 .ingredients(ingredientDtos)
                 .blocks(blockDtos)
                 .build();
