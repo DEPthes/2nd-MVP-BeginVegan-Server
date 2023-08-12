@@ -54,10 +54,9 @@ public class AuthController {
     })
     @PostMapping(value="/sign-out")
     public ResponseEntity<?> signOut(
-        @Parameter(description = "Accesstoken을 입력해주세요.", required = true) @CurrentUser UserPrincipal userPrincipal, 
-        @Parameter(description = "Schemas의 RefreshTokenRequest를 참고해주세요.", required = true) @Valid @RequestBody RefreshTokenReq tokenRefreshRequest
+        @Parameter(description = "Accesstoken을 입력해주세요.", required = true) @CurrentUser UserPrincipal userPrincipal
     ) {
-        return authService.signOut(tokenRefreshRequest);
+        return authService.signOut(userPrincipal);
     }
 
 }

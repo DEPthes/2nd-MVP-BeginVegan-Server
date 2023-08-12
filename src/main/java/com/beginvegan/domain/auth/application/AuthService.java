@@ -3,70 +3,73 @@ package com.beginvegan.domain.auth.application;
 import java.util.Optional;
 
 import com.beginvegan.domain.auth.dto.*;
+import com.beginvegan.domain.auth.exception.InvalidTokenException;
 import com.beginvegan.global.DefaultAssert;
 
 import com.beginvegan.domain.auth.domain.Token;
+import com.beginvegan.global.config.security.token.UserPrincipal;
 import com.beginvegan.global.payload.ApiResponse;
 import com.beginvegan.global.payload.Message;
 import com.beginvegan.domain.auth.domain.repository.TokenRepository;
-import com.beginvegan.domain.user.domain.repository.UserRepository;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
-
+import org.springframework.transaction.annotation.Transactional;
 
 
 @RequiredArgsConstructor
 @Service
+@Transactional(readOnly = true)
 public class AuthService {
 
-    private final AuthenticationManager authenticationManager;
-    private final PasswordEncoder passwordEncoder;
     private final CustomTokenProviderService customTokenProviderService;
-    
-    private final UserRepository userRepository;
+
     private final TokenRepository tokenRepository;
 
+    @Transactional
     public ResponseEntity<?> refresh(RefreshTokenReq tokenRefreshRequest){
         //1차 검증
         boolean checkValid = valid(tokenRefreshRequest.getRefreshToken());
         DefaultAssert.isAuthentication(checkValid);
 
-        Optional<Token> token = tokenRepository.findByRefreshToken(tokenRefreshRequest.getRefreshToken());
-        Authentication authentication = customTokenProviderService.getAuthenticationByEmail(token.get().getUserEmail());
+        Token token = tokenRepository.findByRefreshToken(tokenRefreshRequest.getRefreshToken())
+                .orElseThrow(InvalidTokenException::new);
+        Authentication authentication = customTokenProviderService.getAuthenticationByEmail(token.getUserEmail());
 
-        //4. refresh token 정보 값을 업데이트 한다.
+        //refresh token 정보 값을 업데이트 한다.
         //시간 유효성 확인
         TokenMapping tokenMapping;
 
         Long expirationTime = customTokenProviderService.getExpiration(tokenRefreshRequest.getRefreshToken());
         if(expirationTime > 0){
-            tokenMapping = customTokenProviderService.refreshToken(authentication, token.get().getRefreshToken());
+            tokenMapping = customTokenProviderService.refreshToken(authentication, token.getRefreshToken());
         }else{
             tokenMapping = customTokenProviderService.createToken(authentication);
         }
 
-        Token updateToken = token.get().updateRefreshToken(tokenMapping.getRefreshToken());
-        tokenRepository.save(updateToken);
+        Token updateToken = token.updateRefreshToken(tokenMapping.getRefreshToken());
 
-        AuthRes authResponse = AuthRes.builder().accessToken(tokenMapping.getAccessToken()).refreshToken(updateToken.getRefreshToken()).build();
+        AuthRes authResponse = AuthRes.builder()
+                .accessToken(tokenMapping.getAccessToken())
+                .refreshToken(updateToken.getRefreshToken())
+                .build();
 
         return ResponseEntity.ok(authResponse);
     }
 
-    public ResponseEntity<?> signOut(RefreshTokenReq tokenRefreshRequest){
-        boolean checkValid = valid(tokenRefreshRequest.getRefreshToken());
-        DefaultAssert.isAuthentication(checkValid);
+    @Transactional
+    public ResponseEntity<?> signOut(UserPrincipal userPrincipal){
+        Token token = tokenRepository.findByUserEmail(userPrincipal.getEmail())
+                .orElseThrow(InvalidTokenException::new);
 
-        //4 token 정보를 삭제한다.
-        Optional<Token> token = tokenRepository.findByRefreshToken(tokenRefreshRequest.getRefreshToken());
-        tokenRepository.delete(token.get());
-        ApiResponse apiResponse = ApiResponse.builder().check(true).information(Message.builder().message("로그아웃 하였습니다.").build()).build();
+        tokenRepository.delete(token);
+
+        ApiResponse apiResponse = ApiResponse.builder()
+                .check(true)
+                .information(Message.builder().message("유저가 로그아웃 되었습니다.").build()).build();
 
         return ResponseEntity.ok(apiResponse);
     }

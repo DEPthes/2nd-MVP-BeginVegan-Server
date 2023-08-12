@@ -3,9 +3,12 @@ package com.beginvegan.domain.user.presentation;
 import com.beginvegan.domain.auth.dto.AuthRes;
 import com.beginvegan.domain.auth.dto.RefreshTokenReq;
 import com.beginvegan.domain.user.application.UserService;
+import com.beginvegan.domain.user.dto.UpdateMarketingConsentReq;
+import com.beginvegan.domain.user.dto.UpdateVeganTypeReq;
 import com.beginvegan.global.config.security.token.CurrentUser;
 import com.beginvegan.global.config.security.token.UserPrincipal;
 import com.beginvegan.global.payload.ErrorResponse;
+import com.beginvegan.global.payload.Message;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -35,6 +38,32 @@ public class UserController {
             @Parameter(description = "Accesstoken을 입력해주세요.", required = true) @CurrentUser UserPrincipal userPrincipal
     ) {
         return userService.findUserByToken(userPrincipal);
+    }
+
+    @Operation(summary = "유저의 알림 여부 설정", description = "유저의 알림 여부를 설정합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "유저 정보 조회 성공", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = Message.class))}),
+            @ApiResponse(responseCode = "400", description = "유저 정보 조회 실패", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))}),
+    })
+    @PatchMapping
+    public ResponseEntity<?> updateMarketingConsent(
+            @Parameter(description = "Accesstoken을 입력해주세요.", required = true) @CurrentUser UserPrincipal userPrincipal,
+            @Parameter(description = "UpdateMarketionConsentReq Schema를 확인해주세요.", required = true) @RequestBody UpdateMarketingConsentReq updateMarketingConsentReq
+    ) {
+        return userService.updateMarketingConsent(userPrincipal, updateMarketingConsentReq);
+    }
+
+    @Operation(summary = "유저 비건 타입 변경", description = "유저의 비건 타입을 변경합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "유저 비건 타입 변경 성공", content = { @Content(mediaType = "application/json", schema = @Schema(implementation = Message.class) ) } ),
+            @ApiResponse(responseCode = "400", description = "유저 비건 타입 변경 실패", content = { @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class) ) } ),
+    })
+    @PostMapping("/vegan-type")
+    public ResponseEntity<?> updateVeganType(
+            @Parameter(description = "Accesstoken을 입력해주세요.", required = true) @CurrentUser UserPrincipal userPrincipal,
+            @Parameter(description = "UpdateVeganTypeReq Schema를 확인해주세요", required = true) @RequestBody UpdateVeganTypeReq updateVeganTypeReq
+            ) {
+        return userService.updateVeganType(userPrincipal, updateVeganTypeReq);
     }
 
 }
