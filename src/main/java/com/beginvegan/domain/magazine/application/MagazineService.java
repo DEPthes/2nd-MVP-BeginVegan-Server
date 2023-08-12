@@ -1,15 +1,20 @@
 package com.beginvegan.domain.magazine.application;
 
+import com.beginvegan.domain.block.dto.BlockDto;
 import com.beginvegan.domain.magazine.domain.Magazine;
 import com.beginvegan.domain.magazine.domain.MagazineType;
 import com.beginvegan.domain.magazine.domain.repository.MagazineRepository;
+import com.beginvegan.domain.magazine.dto.request.MagazineDetailReq;
+import com.beginvegan.domain.magazine.dto.response.MagazineDetailRes;
 import com.beginvegan.domain.magazine.dto.response.MagazineListRes;
+import com.beginvegan.domain.magazine.exception.MagazineNotFoundException;
 import com.beginvegan.global.payload.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -54,5 +59,36 @@ public class MagazineService {
                 .build();
 
         return ResponseEntity.ok(apiResponse);
+    }
+
+    // 매거진 상세 조회 : id를 통해 조회
+    public ResponseEntity<?> findMagazinedetail(MagazineDetailReq magazineDetailReq) {
+        Optional<Magazine> magazineOptional = magazineRepository.findById(magazineDetailReq.getId());
+        Magazine magazine = magazineOptional.orElseThrow(() -> new MagazineNotFoundException("해당 아이디를 가진 매거진을 찾을 수 없습니다. ID: " + magazineDetailReq.getId()));
+
+        List<BlockDto> blockDtos = magazine.getMagazineBlocks().stream()
+                .map(block -> BlockDto.builder()
+                        .content(block.getContent())
+                        .sequence(block.getSequence())
+                        .blockType(block.getBlockType())
+                        .build())
+                .collect(Collectors.toList());
+
+        MagazineDetailRes magazineDetailRes = MagazineDetailRes.builder()
+                .id(magazine.getId())
+                .title(magazine.getTitle())
+                .editor(magazine.getEditor())
+                .source(magazine.getSource())
+                .magazineType(magazine.getMagazineType())
+                .magazineContents(blockDtos) // magazineBlocks
+                .build();
+
+        ApiResponse apiResponse = ApiResponse.builder()
+                .check(true)
+                .information(magazineDetailRes)
+                .build();
+
+        return ResponseEntity.ok(apiResponse);
+
     }
 }
