@@ -1,6 +1,7 @@
 package com.beginvegan.domain.restaurant.domain;
 
 import com.beginvegan.domain.common.BaseEntity;
+import com.beginvegan.domain.review.domain.Review;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -41,7 +42,7 @@ public class Restaurant extends BaseEntity {
     List<Menu> menus = new ArrayList<>();
 
     @Builder
-    public Restaurant(Long id, String name, String businessHours, String contactNumber, Address address, String latitude, String longitude, String kakaoMapUrl, String imageUrl, String imageSource, List<Menu> menus) {
+    public Restaurant(Long id, String name, String businessHours, String contactNumber, Address address, String latitude, String longitude, String kakaoMapUrl, String imageUrl, String imageSource) {
         this.id = id;
         this.name = name;
         this.businessHours = businessHours;
@@ -52,7 +53,6 @@ public class Restaurant extends BaseEntity {
         this.kakaoMapUrl = kakaoMapUrl;
         this.imageUrl = imageUrl;
         this.imageSource = imageSource;
-        this.menus = menus;
     }
 
 }
