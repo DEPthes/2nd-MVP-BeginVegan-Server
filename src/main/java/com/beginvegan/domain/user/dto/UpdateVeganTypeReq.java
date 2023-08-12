@@ -7,8 +7,7 @@ import lombok.Data;
 @Data
 public class UpdateVeganTypeReq {
 
-    @Schema(type = "string", example = "VEGAN, LACTO_VEGETARIAN, OVO_VEGETARIAN, LACTO_OVO_VEGETARIAN,\n" +
-            "    POLLOTARIAN, PASCATARIAN, FLEXITARIAN", description = "유저의 비건 타입을 변경합니다.")
+    @Schema(type = "string", example = "VEGAN, LACTO_VEGETARIAN, OVO_VEGETARIAN, LACTO_OVO_VEGETARIAN, POLLOTARIAN, PASCATARIAN, FLEXITARIAN", description = "유저의 비건 타입을 변경합니다.")
     private VeganType veganType;
 
 }
