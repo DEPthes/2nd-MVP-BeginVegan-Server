@@ -3,6 +3,7 @@ package com.beginvegan.domain.restaurant.application;
 import com.beginvegan.domain.bookmark.domain.Bookmark;
 import com.beginvegan.domain.bookmark.domain.repository.BookmarkRepository;
 import com.beginvegan.domain.bookmark.exception.ExistsBookmarkException;
+import com.beginvegan.domain.bookmark.exception.NotExistsBookmarkException;
 import com.beginvegan.domain.restaurant.domain.Restaurant;
 import com.beginvegan.domain.restaurant.domain.repository.MenuRepository;
 import com.beginvegan.domain.restaurant.domain.repository.RestaurantRepository;
@@ -110,6 +111,28 @@ public class RestaurantService {
         ApiResponse apiResponse = ApiResponse.builder()
                 .check(true)
                 .information(Message.builder().message("스크랩 되었습니다.").build())
+                .build();
+
+        return ResponseEntity.ok(apiResponse);
+    }
+
+    @Transactional
+    public ResponseEntity<?> deleteScrapRestaurant(UserPrincipal userPrincipal, Long restaurantId) {
+        User user = userRepository.findById(userPrincipal.getId())
+                .orElseThrow(InvalidUserException::new);
+        Restaurant restaurant = restaurantRepository.findById(restaurantId)
+                .orElseThrow(InvalidRestaurantException::new);
+
+        if (!bookmarkRepository.existsBookmarkByUserAndRestaurant(user, restaurant)) {
+            throw new NotExistsBookmarkException();
+        }
+
+        Bookmark bookmark = bookmarkRepository.findBookmarkByUserAndRestaurant(user, restaurant);
+        bookmarkRepository.delete(bookmark);
+
+        ApiResponse apiResponse = ApiResponse.builder()
+                .check(true)
+                .information(Message.builder().message("스크랩 해제되었습니다.").build())
                 .build();
 
         return ResponseEntity.ok(apiResponse);

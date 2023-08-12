@@ -13,6 +13,8 @@ public interface BookmarkRepository extends JpaRepository<Bookmark, Long> {
     @EntityGraph(attributePaths = {"restaurant"})
     Page<Bookmark> findBookmarksByUser(User user, Pageable pageable);
 
+    Bookmark findBookmarkByUserAndRestaurant(User user, Restaurant restaurant);
+
     boolean existsBookmarkByUserAndRestaurant(User user, Restaurant restaurant);
 
 }

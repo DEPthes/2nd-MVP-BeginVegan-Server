@@ -65,4 +65,17 @@ public class RestaurantController {
         return restaurantService.scrapRestaurant(userPrincipal, restaurantId);
     }
 
+    @Operation(summary = "식당/카페 스크랩 해제", description = "식당/카페를 스크랩을 해제합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "식당/카페 스크랩 해제 성공", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = Message.class)) } ),
+            @ApiResponse(responseCode = "400", description = "식당/카페 스크랩 해제 실패", content = { @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class) ) } ),
+    })
+    @DeleteMapping("/{restaurant-id}")
+    public ResponseEntity<?> deleteScrapRestaurant(
+            @Parameter(description = "AccessToken을 입력해주세요") @CurrentUser UserPrincipal userPrincipal,
+            @Parameter(description = "식당/카페ID로 스크랩합니다.", required = true) @PathVariable(value = "restaurant-id") Long restaurantId
+    ) {
+        return restaurantService.deleteScrapRestaurant(userPrincipal, restaurantId);
+    }
+
 }
