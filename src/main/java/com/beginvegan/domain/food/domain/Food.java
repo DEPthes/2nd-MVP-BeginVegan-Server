@@ -22,6 +22,7 @@ public class Food extends BaseEntity {
 
     private String name;
 
+    @Enumerated(value = EnumType.STRING)
     private VeganType veganType;
 
     private String description;
