@@ -21,6 +21,7 @@ public class Block extends BaseEntity {
 
     private Integer sequence;
 
+    @Enumerated(EnumType.STRING)
     private BlockType blockType;
 
     @ManyToOne(fetch = FetchType.LAZY)
