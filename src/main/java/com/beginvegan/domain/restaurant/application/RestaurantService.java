@@ -4,12 +4,11 @@ import com.beginvegan.domain.bookmark.domain.Bookmark;
 import com.beginvegan.domain.bookmark.domain.repository.BookmarkRepository;
 import com.beginvegan.domain.bookmark.exception.ExistsBookmarkException;
 import com.beginvegan.domain.bookmark.exception.NotExistsBookmarkException;
+import com.beginvegan.domain.restaurant.domain.Menu;
 import com.beginvegan.domain.restaurant.domain.Restaurant;
 import com.beginvegan.domain.restaurant.domain.repository.MenuRepository;
 import com.beginvegan.domain.restaurant.domain.repository.RestaurantRepository;
-import com.beginvegan.domain.restaurant.dto.MenuDetailRes;
-import com.beginvegan.domain.restaurant.dto.RestaurantAndMenusRes;
-import com.beginvegan.domain.restaurant.dto.RestaurantDetailRes;
+import com.beginvegan.domain.restaurant.dto.*;
 import com.beginvegan.domain.restaurant.exception.InvalidRestaurantException;
 import com.beginvegan.domain.review.domain.Review;
 import com.beginvegan.domain.review.domain.repository.ReviewRepository;
@@ -30,7 +29,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -138,4 +139,36 @@ public class RestaurantService {
         return ResponseEntity.ok(apiResponse);
     }
 
+    @Transactional
+    public ResponseEntity<?> findAllRestaurant() {
+        List<Restaurant> restaurants = restaurantRepository.findAll();
+        List<RestaurantListRes> restaurantDtos = new ArrayList<>();
+
+        for(Restaurant restaurant : restaurants) {
+            List<MenuDto> menuDtos = restaurant.getMenus().stream()
+                    .map(menu -> MenuDto.builder()
+                            .id(menu.getId())
+                            .imageUrl(menu.getImageUrl())
+                            .build())
+                    .collect(Collectors.toList());
+
+            RestaurantListRes restaurantListRes = RestaurantListRes.builder()
+                    .id(restaurant.getId())
+                    .name(restaurant.getName())
+                    .businessHours(restaurant.getBusinessHours())
+                    .address(restaurant.getAddress())
+                    .imageUrl(restaurant.getImageUrl())
+                    .menuDtos(menuDtos)
+                    .build();
+
+            restaurantDtos.add(restaurantListRes);
+        }
+
+        ApiResponse apiResponse = ApiResponse.builder()
+                .check(true)
+                .information(restaurantDtos)
+                .build();
+
+        return ResponseEntity.ok(apiResponse);
+    }
 }

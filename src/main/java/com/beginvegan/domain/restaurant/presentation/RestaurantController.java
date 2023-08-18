@@ -3,6 +3,7 @@ package com.beginvegan.domain.restaurant.presentation;
 import com.beginvegan.domain.restaurant.application.RestaurantService;
 import com.beginvegan.domain.restaurant.dto.RestaurantAndMenusRes;
 import com.beginvegan.domain.restaurant.dto.RestaurantDetailRes;
+import com.beginvegan.domain.restaurant.dto.RestaurantListRes;
 import com.beginvegan.domain.review.dto.ReviewListRes;
 import com.beginvegan.global.config.security.token.CurrentUser;
 import com.beginvegan.global.config.security.token.UserPrincipal;
@@ -76,6 +77,17 @@ public class RestaurantController {
             @Parameter(description = "식당/카페ID로 스크랩합니다.", required = true) @PathVariable(value = "restaurant-id") Long restaurantId
     ) {
         return restaurantService.deleteScrapRestaurant(userPrincipal, restaurantId);
+    }
+
+    // 승우
+    @Operation(summary = "주변 식당 목록 조회", description = "주변 식당 목록을 조회합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "주변 식당 목록 조회 성공", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = RestaurantListRes.class)) } ),
+            @ApiResponse(responseCode = "400", description = "주변 식당 목록 조회 실패", content = { @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class) ) } ),
+    })
+    @GetMapping
+    public ResponseEntity<?> findAllRestaurant() {
+        return restaurantService.findAllRestaurant();
     }
 
 }
