@@ -25,6 +25,9 @@ public class Restaurant extends BaseEntity {
 
     private String contactNumber;
 
+    @Enumerated(EnumType.STRING)
+    private RestaurantType restaurantType;
+
     @Embedded
     private Address address;
 
@@ -42,11 +45,12 @@ public class Restaurant extends BaseEntity {
     List<Menu> menus = new ArrayList<>();
 
     @Builder
-    public Restaurant(Long id, String name, String businessHours, String contactNumber, Address address, String latitude, String longitude, String kakaoMapUrl, String imageUrl, String imageSource) {
+    public Restaurant(Long id, String name, String businessHours, String contactNumber, RestaurantType restaurantType, Address address, String latitude, String longitude, String kakaoMapUrl, String imageUrl, String imageSource) {
         this.id = id;
         this.name = name;
         this.businessHours = businessHours;
         this.contactNumber = contactNumber;
+        this.restaurantType = restaurantType;
         this.address = address;
         this.latitude = latitude;
         this.longitude = longitude;
