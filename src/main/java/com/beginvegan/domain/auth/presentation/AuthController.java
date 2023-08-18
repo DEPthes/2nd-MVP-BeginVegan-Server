@@ -34,6 +34,18 @@ public class AuthController {
 
     private final AuthService authService;
 
+    @Operation(summary = "유저 로그인", description = "유저 로그인을 수행합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "로그인 성공", content = { @Content(mediaType = "application/json", schema = @Schema(implementation = Message.class) ) } ),
+            @ApiResponse(responseCode = "400", description = "로그인 실패", content = { @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class) ) } ),
+    })
+    @PostMapping(value="/sign-Up")
+    public ResponseEntity<?> signUp(
+            @Parameter(description = "SignUpReq Schema를 확인해주세요.", required = true) @RequestBody SignUpReq signUpReq
+    ) {
+        return authService.signUp(signUpReq);
+    }
+
     @Operation(summary = "토큰 갱신", description = "신규 토큰 갱신을 수행합니다.")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "토큰 갱신 성공", content = { @Content(mediaType = "application/json", schema = @Schema(implementation = AuthRes.class) ) } ),

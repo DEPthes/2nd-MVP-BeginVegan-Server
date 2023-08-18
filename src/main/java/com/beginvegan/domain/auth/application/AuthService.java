@@ -4,6 +4,9 @@ import java.util.Optional;
 
 import com.beginvegan.domain.auth.dto.*;
 import com.beginvegan.domain.auth.exception.InvalidTokenException;
+import com.beginvegan.domain.user.domain.Provider;
+import com.beginvegan.domain.user.domain.User;
+import com.beginvegan.domain.user.domain.repository.UserRepository;
 import com.beginvegan.global.DefaultAssert;
 
 import com.beginvegan.domain.auth.domain.Token;
@@ -28,6 +31,7 @@ public class AuthService {
     private final CustomTokenProviderService customTokenProviderService;
 
     private final TokenRepository tokenRepository;
+    private final UserRepository userRepository;
 
     @Transactional
     public ResponseEntity<?> refresh(RefreshTokenReq tokenRefreshRequest){
@@ -89,6 +93,26 @@ public class AuthService {
         DefaultAssert.isTrue(token.get().getUserEmail().equals(authentication.getName()), "사용자 인증에 실패하였습니다.");
 
         return true;
+    }
+
+    @Transactional
+    public ResponseEntity<?> signUp(SignUpReq signUpReq) {
+        User newUser = User.builder()
+                .providerId(signUpReq.getProviderId())
+                .provider(Provider.kakao)
+                .name(signUpReq.getNickname())
+                .email(signUpReq.getEmail())
+                .imageUrl(signUpReq.getProfileImgUrl())
+                .build();
+
+        userRepository.save(newUser);
+
+        ApiResponse apiResponse = ApiResponse.builder()
+                .check(true)
+                .information(Message.builder().message("회원가입 완료되었습니다.").build())
+                .build();
+
+        return ResponseEntity.ok(apiResponse);
     }
 
 }
