@@ -158,7 +158,7 @@ public class RestaurantService {
                     .businessHours(restaurant.getBusinessHours())
                     .address(restaurant.getAddress())
                     .imageUrl(restaurant.getImageUrl())
-                    .menuDtos(menuDtos)
+                    .menus(menuDtos)
                     .build();
 
             restaurantDtos.add(restaurantListRes);

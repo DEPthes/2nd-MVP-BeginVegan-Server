@@ -20,15 +20,15 @@ public class RestaurantListRes {
 
     private String imageUrl;
 
-    private List<MenuDto> menuDtos = new ArrayList<>();
+    private List<MenuDto> menus = new ArrayList<>();
 
     @Builder
-    public RestaurantListRes(Long id, String name, String businessHours, Address address, String imageUrl, List<MenuDto> menuDtos) {
+    public RestaurantListRes(Long id, String name, String businessHours, Address address, String imageUrl, List<MenuDto> menus) {
         this.id = id;
         this.name = name;
         this.businessHours = businessHours;
         this.address = address;
         this.imageUrl = imageUrl;
-        this.menuDtos = menuDtos;
+        this.menus = menus;
     }
 }
