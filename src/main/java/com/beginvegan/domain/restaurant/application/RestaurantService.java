@@ -168,7 +168,7 @@ public class RestaurantService {
                 double distance = EARTH_RADIUS * c;
 
                 // 10km 안에 있는 식당들만 포함
-                if (distance <= 10) {
+                if (distance <= 5) {
                     List<MenuDto> menuDtos = nearRestaurant.getMenus().stream()
                             .map(menu -> MenuDto.builder()
                                     .id(menu.getId())
