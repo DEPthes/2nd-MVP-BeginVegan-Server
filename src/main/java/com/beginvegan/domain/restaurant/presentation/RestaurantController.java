@@ -1,10 +1,8 @@
 package com.beginvegan.domain.restaurant.presentation;
 
-import com.beginvegan.domain.food.dto.request.FoodDetailReq;
 import com.beginvegan.domain.restaurant.application.RestaurantService;
-import com.beginvegan.domain.restaurant.dto.ArroundRestaurantListRes;
+import com.beginvegan.domain.restaurant.dto.AroundRestaurantListRes;
 import com.beginvegan.domain.restaurant.dto.RestaurantAndMenusRes;
-import com.beginvegan.domain.restaurant.dto.RestaurantDetailRes;
 import com.beginvegan.domain.restaurant.dto.request.LocationReq;
 import com.beginvegan.domain.review.dto.ReviewListRes;
 import com.beginvegan.global.config.security.token.CurrentUser;
@@ -83,12 +81,12 @@ public class RestaurantController {
 
     @Operation(summary = "주변 식당/카페 리스트 조회", description = "주변 식당/카페 리스트를 조회합니다.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "주변 식당/카페 리스트 조회 성공", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ArroundRestaurantListRes.class)) } ),
+            @ApiResponse(responseCode = "200", description = "주변 식당/카페 리스트 조회 성공", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = AroundRestaurantListRes.class)) } ),
             @ApiResponse(responseCode = "400", description = "주변 식당/카페 리스트 조회 실패", content = { @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class) ) } ),
     })
     @PostMapping("/arround")
-    public ResponseEntity<?> findArroundRestaurant(@RequestBody LocationReq locationReq) {
-        return restaurantService.findArroundRestaurant(locationReq);
+    public ResponseEntity<?> findAroundRestaurant(@RequestBody LocationReq locationReq) {
+        return restaurantService.findAroundRestaurant(locationReq);
     }
 
 }
