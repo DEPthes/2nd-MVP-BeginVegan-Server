@@ -5,16 +5,13 @@ import com.beginvegan.domain.bookmark.domain.repository.BookmarkRepository;
 import com.beginvegan.domain.bookmark.exception.ExistsBookmarkException;
 import com.beginvegan.domain.bookmark.exception.NotExistsBookmarkException;
 import com.beginvegan.domain.restaurant.domain.Restaurant;
-import com.beginvegan.domain.restaurant.domain.repository.MenuRepository;
 import com.beginvegan.domain.restaurant.domain.repository.RestaurantRepository;
-import com.beginvegan.domain.restaurant.dto.MenuDetailRes;
-import com.beginvegan.domain.restaurant.dto.RestaurantAndMenusRes;
-import com.beginvegan.domain.restaurant.dto.RestaurantDetailRes;
+import com.beginvegan.domain.restaurant.dto.*;
+import com.beginvegan.domain.restaurant.dto.request.LocationReq;
 import com.beginvegan.domain.restaurant.exception.InvalidRestaurantException;
 import com.beginvegan.domain.review.domain.Review;
 import com.beginvegan.domain.review.domain.repository.ReviewRepository;
 import com.beginvegan.domain.review.dto.RestaurantReviewDetailRes;
-import com.beginvegan.domain.review.dto.ReviewDetailRes;
 import com.beginvegan.domain.review.dto.ReviewListRes;
 import com.beginvegan.domain.user.domain.User;
 import com.beginvegan.domain.user.domain.repository.UserRepository;
@@ -30,7 +27,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -133,6 +132,62 @@ public class RestaurantService {
         ApiResponse apiResponse = ApiResponse.builder()
                 .check(true)
                 .information(Message.builder().message("스크랩 해제되었습니다.").build())
+                .build();
+
+        return ResponseEntity.ok(apiResponse);
+    }
+
+    public ResponseEntity<?> findAroundRestaurant(LocationReq locationReq) {
+        // 지구의 반지름
+        final int EARTH_RADIUS = 6371;
+
+        List<Restaurant> restaurants = restaurantRepository.findAll();
+        List<AroundRestaurantListRes> restaurantDtos = new ArrayList<>();
+
+        double userLatitude = Double.parseDouble(locationReq.getLatitude());
+        double userLongitude = Double.parseDouble(locationReq.getLongitude());
+
+        if(!restaurants.isEmpty()) {
+            for (Restaurant restaurant : restaurants) {
+                double restaurantLatitude = Double.parseDouble(restaurant.getLatitude());
+                double restaurantLongitude = Double.parseDouble(restaurant.getLongitude());
+
+                // 거리 (라디안)
+                double dLatitude = Math.toRadians(restaurantLatitude - userLatitude);
+                double dLongitude = Math.toRadians(restaurantLongitude - userLongitude);
+
+                double a = Math.sin(dLatitude / 2) * Math.sin(dLatitude / 2) + Math.cos(Math.toRadians(userLatitude)) * Math.cos(Math.toRadians(restaurantLatitude)) * Math.sin(dLongitude / 2) * Math.sin(dLongitude / 2);
+                double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+                // 식당과 내 위치 거리 (km)
+                double distance = EARTH_RADIUS * c;
+
+                // 10km 안에 있는 식당들만 포함
+                if (distance <= 10) {
+                    List<MenuDto> menuDtos = restaurant.getMenus().stream()
+                            .map(menu -> MenuDto.builder()
+                                    .id(menu.getId())
+                                    .imageUrl(menu.getImageUrl())
+                                    .build())
+                            .collect(Collectors.toList());
+
+                    AroundRestaurantListRes aroundRestaurantListRes = AroundRestaurantListRes.builder()
+                            .id(restaurant.getId())
+                            .name(restaurant.getName())
+                            .businessHours(restaurant.getBusinessHours())
+                            .address(restaurant.getAddress())
+                            .imageUrl(restaurant.getImageUrl())
+                            .menus(menuDtos)
+                            .build();
+
+                    restaurantDtos.add(aroundRestaurantListRes);
+                }
+            }
+        }
+
+        ApiResponse apiResponse = ApiResponse.builder()
+                .check(true)
+                .information(restaurantDtos)
                 .build();
 
         return ResponseEntity.ok(apiResponse);
