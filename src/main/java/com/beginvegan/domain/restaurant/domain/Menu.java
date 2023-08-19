@@ -17,7 +17,7 @@ public class Menu extends BaseEntity {
 
     private String name;
 
-    private Integer price;
+    private String price;
 
     private String description;
 
@@ -28,7 +28,7 @@ public class Menu extends BaseEntity {
     private Restaurant restaurant;
 
     @Builder
-    public Menu(Long id, String name, Integer price, String description, String imageUrl, Restaurant restaurant) {
+    public Menu(Long id, String name, String price, String description, String imageUrl, Restaurant restaurant) {
         this.id = id;
         this.name = name;
         this.price = price;
