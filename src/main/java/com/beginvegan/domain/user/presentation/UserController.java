@@ -4,6 +4,7 @@ import com.beginvegan.domain.auth.dto.AuthRes;
 import com.beginvegan.domain.auth.dto.RefreshTokenReq;
 import com.beginvegan.domain.user.application.UserService;
 import com.beginvegan.domain.user.dto.UpdateMarketingConsentReq;
+import com.beginvegan.domain.user.dto.UpdateNicknameReq;
 import com.beginvegan.domain.user.dto.UpdateVeganTypeReq;
 import com.beginvegan.global.config.security.token.CurrentUser;
 import com.beginvegan.global.config.security.token.UserPrincipal;
@@ -64,6 +65,19 @@ public class UserController {
             @Parameter(description = "UpdateVeganTypeReq Schema를 확인해주세요", required = true) @RequestBody UpdateVeganTypeReq updateVeganTypeReq
             ) {
         return userService.updateVeganType(userPrincipal, updateVeganTypeReq);
+    }
+
+    @Operation(summary = "유저 닉네임 변경", description = "유저의 닉네임을 변경합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "유저 닉네임 변경 성공", content = { @Content(mediaType = "application/json", schema = @Schema(implementation = Message.class) ) } ),
+            @ApiResponse(responseCode = "400", description = "유저 닉네임 변경 실패", content = { @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class) ) } ),
+    })
+    @PostMapping("/nickname")
+    public ResponseEntity<?> updateNickname(
+            @Parameter(description = "Accesstoken을 입력해주세요.", required = true) @CurrentUser UserPrincipal userPrincipal,
+            @Parameter(description = "UpdateVeganTypeReq Schema를 확인해주세요", required = true) @RequestBody UpdateNicknameReq updateNicknameReq
+    ) {
+        return userService.updateNickname(userPrincipal, updateNicknameReq);
     }
 
 }
