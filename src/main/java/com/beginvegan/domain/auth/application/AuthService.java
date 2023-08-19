@@ -16,7 +16,10 @@ import com.beginvegan.global.payload.Message;
 import com.beginvegan.domain.auth.domain.repository.TokenRepository;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
@@ -29,6 +32,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class AuthService {
 
     private final CustomTokenProviderService customTokenProviderService;
+    private final AuthenticationManager authenticationManager;
 
     private final TokenRepository tokenRepository;
     private final UserRepository userRepository;
@@ -73,7 +77,49 @@ public class AuthService {
 
         ApiResponse apiResponse = ApiResponse.builder()
                 .check(true)
-                .information(Message.builder().message("유저가 로그아웃 되었습니다.").build()).build();
+                .information(Message.builder().message("유저가 로그아웃 되었습니다.").build())
+                .build();
+
+        return ResponseEntity.ok(apiResponse);
+    }
+
+    @Transactional
+    public ResponseEntity<?> signUp(SignUpReq signUpReq) {
+        User newUser = User.builder()
+                .providerId(signUpReq.getProviderId())
+                .provider(Provider.kakao)
+                .name(signUpReq.getNickname())
+                .email(signUpReq.getEmail())
+                .imageUrl(signUpReq.getProfileImgUrl())
+                .build();
+
+        userRepository.save(newUser);
+
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        signUpReq.getEmail(),
+                        signUpReq.getProviderId()
+                )
+        );
+
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        TokenMapping tokenMapping = customTokenProviderService.createToken(authentication);
+        Token token = Token.builder()
+                .refreshToken(tokenMapping.getRefreshToken())
+                .userEmail(tokenMapping.getUserEmail())
+                .build();
+        tokenRepository.save(token);
+
+        AuthRes authRes = AuthRes.builder()
+                .accessToken(tokenMapping.getAccessToken())
+                .refreshToken(tokenMapping.getRefreshToken())
+                .build();
+
+        ApiResponse apiResponse = ApiResponse.builder()
+                .check(true)
+                .information(authRes)
+                .build();
 
         return ResponseEntity.ok(apiResponse);
     }
@@ -93,26 +139,6 @@ public class AuthService {
         DefaultAssert.isTrue(token.get().getUserEmail().equals(authentication.getName()), "사용자 인증에 실패하였습니다.");
 
         return true;
-    }
-
-    @Transactional
-    public ResponseEntity<?> signUp(SignUpReq signUpReq) {
-        User newUser = User.builder()
-                .providerId(signUpReq.getProviderId())
-                .provider(Provider.kakao)
-                .name(signUpReq.getNickname())
-                .email(signUpReq.getEmail())
-                .imageUrl(signUpReq.getProfileImgUrl())
-                .build();
-
-        userRepository.save(newUser);
-
-        ApiResponse apiResponse = ApiResponse.builder()
-                .check(true)
-                .information(Message.builder().message("회원가입 완료되었습니다.").build())
-                .build();
-
-        return ResponseEntity.ok(apiResponse);
     }
 
 }

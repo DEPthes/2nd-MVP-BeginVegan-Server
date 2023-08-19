@@ -86,7 +86,7 @@ public class RestaurantController {
             @ApiResponse(responseCode = "200", description = "주변 식당/카페 리스트 조회 성공", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ArroundRestaurantListRes.class)) } ),
             @ApiResponse(responseCode = "400", description = "주변 식당/카페 리스트 조회 실패", content = { @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class) ) } ),
     })
-    @GetMapping("/arround")
+    @PostMapping("/arround")
     public ResponseEntity<?> findArroundRestaurant(@RequestBody LocationReq locationReq) {
         return restaurantService.findArroundRestaurant(locationReq);
     }
