@@ -137,20 +137,25 @@ public class RestaurantService {
         return ResponseEntity.ok(apiResponse);
     }
 
-    public ResponseEntity<?> findAroundRestaurant(LocationReq locationReq) {
+    public ResponseEntity<?> findAroundRestaurant(Long restaurantId) {
+        Restaurant restaurant = restaurantRepository.findById(restaurantId)
+                .orElseThrow(InvalidRestaurantException::new);
+
         // 지구의 반지름
         final int EARTH_RADIUS = 6371;
 
-        List<Restaurant> restaurants = restaurantRepository.findAll();
+        List<Restaurant> nearRestaurants = restaurantRepository.findAllWithMenus();
+        nearRestaurants.remove(restaurant);
+
         List<AroundRestaurantListRes> restaurantDtos = new ArrayList<>();
 
-        double userLatitude = Double.parseDouble(locationReq.getLatitude());
-        double userLongitude = Double.parseDouble(locationReq.getLongitude());
+        double userLatitude = Double.parseDouble(restaurant.getLatitude());
+        double userLongitude = Double.parseDouble(restaurant.getLongitude());
 
-        if(!restaurants.isEmpty()) {
-            for (Restaurant restaurant : restaurants) {
-                double restaurantLatitude = Double.parseDouble(restaurant.getLatitude());
-                double restaurantLongitude = Double.parseDouble(restaurant.getLongitude());
+        if(!nearRestaurants.isEmpty()) {
+            for (Restaurant nearRestaurant : nearRestaurants) {
+                double restaurantLatitude = Double.parseDouble(nearRestaurant.getLatitude());
+                double restaurantLongitude = Double.parseDouble(nearRestaurant.getLongitude());
 
                 // 거리 (라디안)
                 double dLatitude = Math.toRadians(restaurantLatitude - userLatitude);
@@ -164,7 +169,7 @@ public class RestaurantService {
 
                 // 10km 안에 있는 식당들만 포함
                 if (distance <= 10) {
-                    List<MenuDto> menuDtos = restaurant.getMenus().stream()
+                    List<MenuDto> menuDtos = nearRestaurant.getMenus().stream()
                             .map(menu -> MenuDto.builder()
                                     .id(menu.getId())
                                     .imageUrl(menu.getImageUrl())
@@ -172,11 +177,11 @@ public class RestaurantService {
                             .collect(Collectors.toList());
 
                     AroundRestaurantListRes aroundRestaurantListRes = AroundRestaurantListRes.builder()
-                            .id(restaurant.getId())
-                            .name(restaurant.getName())
-                            .businessHours(restaurant.getBusinessHours())
-                            .address(restaurant.getAddress())
-                            .imageUrl(restaurant.getImageUrl())
+                            .id(nearRestaurant.getId())
+                            .name(nearRestaurant.getName())
+                            .businessHours(nearRestaurant.getBusinessHours())
+                            .address(nearRestaurant.getAddress())
+                            .imageUrl(nearRestaurant.getImageUrl())
                             .menus(menuDtos)
                             .build();
 
