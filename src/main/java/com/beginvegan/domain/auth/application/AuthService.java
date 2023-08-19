@@ -3,8 +3,10 @@ package com.beginvegan.domain.auth.application;
 import java.util.Optional;
 
 import com.beginvegan.domain.auth.dto.*;
+import com.beginvegan.domain.auth.exception.AlreadyExistEmailException;
 import com.beginvegan.domain.auth.exception.InvalidTokenException;
 import com.beginvegan.domain.user.domain.Provider;
+import com.beginvegan.domain.user.domain.Role;
 import com.beginvegan.domain.user.domain.User;
 import com.beginvegan.domain.user.domain.repository.UserRepository;
 import com.beginvegan.global.DefaultAssert;
@@ -20,6 +22,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
@@ -33,6 +36,7 @@ public class AuthService {
 
     private final CustomTokenProviderService customTokenProviderService;
     private final AuthenticationManager authenticationManager;
+    private final PasswordEncoder passwordEncoder;
 
     private final TokenRepository tokenRepository;
     private final UserRepository userRepository;
@@ -85,12 +89,17 @@ public class AuthService {
 
     @Transactional
     public ResponseEntity<?> signUp(SignUpReq signUpReq) {
+        if(userRepository.existsByEmail(signUpReq.getEmail()))
+            throw new AlreadyExistEmailException();
+
         User newUser = User.builder()
                 .providerId(signUpReq.getProviderId())
                 .provider(Provider.kakao)
                 .name(signUpReq.getNickname())
                 .email(signUpReq.getEmail())
                 .imageUrl(signUpReq.getProfileImgUrl())
+                .password(passwordEncoder.encode(signUpReq.getProviderId()))
+                .role(Role.USER)
                 .build();
 
         userRepository.save(newUser);
