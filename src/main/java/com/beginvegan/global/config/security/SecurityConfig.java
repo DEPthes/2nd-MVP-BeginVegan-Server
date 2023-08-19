@@ -81,6 +81,8 @@ public class SecurityConfig {
                         .permitAll()
                         .requestMatchers("/blog/**")
                         .permitAll()
+                        .requestMatchers("/api/v1/foods/**", "/api/v1/magazines/**")
+                        .permitAll()
                         .anyRequest()
                         .authenticated())
                 .oauth2Login(oauth2 -> oauth2

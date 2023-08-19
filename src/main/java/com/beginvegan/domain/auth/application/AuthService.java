@@ -3,7 +3,12 @@ package com.beginvegan.domain.auth.application;
 import java.util.Optional;
 
 import com.beginvegan.domain.auth.dto.*;
+import com.beginvegan.domain.auth.exception.AlreadyExistEmailException;
 import com.beginvegan.domain.auth.exception.InvalidTokenException;
+import com.beginvegan.domain.user.domain.Provider;
+import com.beginvegan.domain.user.domain.Role;
+import com.beginvegan.domain.user.domain.User;
+import com.beginvegan.domain.user.domain.repository.UserRepository;
 import com.beginvegan.global.DefaultAssert;
 
 import com.beginvegan.domain.auth.domain.Token;
@@ -13,7 +18,11 @@ import com.beginvegan.global.payload.Message;
 import com.beginvegan.domain.auth.domain.repository.TokenRepository;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
@@ -26,8 +35,11 @@ import org.springframework.transaction.annotation.Transactional;
 public class AuthService {
 
     private final CustomTokenProviderService customTokenProviderService;
+    private final AuthenticationManager authenticationManager;
+    private final PasswordEncoder passwordEncoder;
 
     private final TokenRepository tokenRepository;
+    private final UserRepository userRepository;
 
     @Transactional
     public ResponseEntity<?> refresh(RefreshTokenReq tokenRefreshRequest){
@@ -57,7 +69,12 @@ public class AuthService {
                 .refreshToken(updateToken.getRefreshToken())
                 .build();
 
-        return ResponseEntity.ok(authResponse);
+        ApiResponse apiResponse = ApiResponse.builder()
+                .check(true)
+                .information(authResponse)
+                .build();
+
+        return ResponseEntity.ok(apiResponse);
     }
 
     @Transactional
@@ -69,7 +86,54 @@ public class AuthService {
 
         ApiResponse apiResponse = ApiResponse.builder()
                 .check(true)
-                .information(Message.builder().message("유저가 로그아웃 되었습니다.").build()).build();
+                .information(Message.builder().message("유저가 로그아웃 되었습니다.").build())
+                .build();
+
+        return ResponseEntity.ok(apiResponse);
+    }
+
+    @Transactional
+    public ResponseEntity<?> signUp(SignUpReq signUpReq) {
+        if(userRepository.existsByEmail(signUpReq.getEmail()))
+            throw new AlreadyExistEmailException();
+
+        User newUser = User.builder()
+                .providerId(signUpReq.getProviderId())
+                .provider(Provider.kakao)
+                .name(signUpReq.getNickname())
+                .email(signUpReq.getEmail())
+                .imageUrl(signUpReq.getProfileImgUrl())
+                .password(passwordEncoder.encode(signUpReq.getProviderId()))
+                .role(Role.USER)
+                .build();
+
+        userRepository.save(newUser);
+
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        signUpReq.getEmail(),
+                        signUpReq.getProviderId()
+                )
+        );
+
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        TokenMapping tokenMapping = customTokenProviderService.createToken(authentication);
+        Token token = Token.builder()
+                .refreshToken(tokenMapping.getRefreshToken())
+                .userEmail(tokenMapping.getUserEmail())
+                .build();
+        tokenRepository.save(token);
+
+        AuthRes authRes = AuthRes.builder()
+                .accessToken(tokenMapping.getAccessToken())
+                .refreshToken(tokenMapping.getRefreshToken())
+                .build();
+
+        ApiResponse apiResponse = ApiResponse.builder()
+                .check(true)
+                .information(authRes)
+                .build();
 
         return ResponseEntity.ok(apiResponse);
     }

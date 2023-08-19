@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Data
-public class ArroundRestaurantListRes {
+public class AroundRestaurantListRes {
 
     private Long id;
 
@@ -23,7 +23,7 @@ public class ArroundRestaurantListRes {
     private List<MenuDto> menus = new ArrayList<>();
 
     @Builder
-    public ArroundRestaurantListRes(Long id, String name, String businessHours, Address address, String imageUrl, List<MenuDto> menus) {
+    public AroundRestaurantListRes(Long id, String name, String businessHours, Address address, String imageUrl, List<MenuDto> menus) {
         this.id = id;
         this.name = name;
         this.businessHours = businessHours;
