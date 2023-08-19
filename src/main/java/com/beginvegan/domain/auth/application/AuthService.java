@@ -69,7 +69,12 @@ public class AuthService {
                 .refreshToken(updateToken.getRefreshToken())
                 .build();
 
-        return ResponseEntity.ok(authResponse);
+        ApiResponse apiResponse = ApiResponse.builder()
+                .check(true)
+                .information(authResponse)
+                .build();
+
+        return ResponseEntity.ok(apiResponse);
     }
 
     @Transactional
