@@ -137,20 +137,16 @@ public class RestaurantService {
         return ResponseEntity.ok(apiResponse);
     }
 
-    public ResponseEntity<?> findAroundRestaurant(Long restaurantId) {
-        Restaurant restaurant = restaurantRepository.findById(restaurantId)
-                .orElseThrow(InvalidRestaurantException::new);
-
+    public ResponseEntity<?> findAroundRestaurant(LocationReq locationReq) {
         // 지구의 반지름
         final int EARTH_RADIUS = 6371;
 
         List<Restaurant> nearRestaurants = restaurantRepository.findAllWithMenus();
-        nearRestaurants.remove(restaurant);
 
         List<AroundRestaurantListRes> restaurantDtos = new ArrayList<>();
 
-        double userLatitude = Double.parseDouble(restaurant.getLatitude());
-        double userLongitude = Double.parseDouble(restaurant.getLongitude());
+        double userLatitude = Double.parseDouble(locationReq.getLatitude());
+        double userLongitude = Double.parseDouble(locationReq.getLongitude());
 
         if(!nearRestaurants.isEmpty()) {
             for (Restaurant nearRestaurant : nearRestaurants) {
@@ -167,7 +163,7 @@ public class RestaurantService {
                 // 식당과 내 위치 거리 (km)
                 double distance = EARTH_RADIUS * c;
 
-                // 10km 안에 있는 식당들만 포함
+                // 5km 안에 있는 식당들만 포함
                 if (distance <= 5) {
                     List<MenuDto> menuDtos = nearRestaurant.getMenus().stream()
                             .map(menu -> MenuDto.builder()

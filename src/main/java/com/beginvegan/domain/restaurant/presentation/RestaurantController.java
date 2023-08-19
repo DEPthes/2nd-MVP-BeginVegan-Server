@@ -84,10 +84,9 @@ public class RestaurantController {
             @ApiResponse(responseCode = "200", description = "주변 식당/카페 리스트 조회 성공", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = AroundRestaurantListRes.class))}),
             @ApiResponse(responseCode = "400", description = "주변 식당/카페 리스트 조회 실패", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))}),
     })
-    @GetMapping("/around")
-    public ResponseEntity<?> findAroundRestaurant(
-            @Parameter(description = "식당/카페 아이디를 입력해주세요.", required = true) @RequestParam(value = "restaurant-id") Long restaurantId) {
-        return restaurantService.findAroundRestaurant(restaurantId);
+    @PostMapping("/around")
+    public ResponseEntity<?> findAroundRestaurant(@RequestBody LocationReq locationReq) {
+        return restaurantService.findAroundRestaurant(locationReq);
     }
 
 }
