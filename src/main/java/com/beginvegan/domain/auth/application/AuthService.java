@@ -155,4 +155,33 @@ public class AuthService {
         return true;
     }
 
+    public ResponseEntity<?> signIn(SignInReq signInReq) {
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        signInReq.getEmail(),
+                        signInReq.getProviderId()
+                )
+        );
+
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        TokenMapping tokenMapping = customTokenProviderService.createToken(authentication);
+        Token token = Token.builder()
+                .refreshToken(tokenMapping.getRefreshToken())
+                .userEmail(tokenMapping.getUserEmail())
+                .build();
+        tokenRepository.save(token);
+
+        AuthRes authResponse = AuthRes.builder()
+                .accessToken(tokenMapping.getAccessToken())
+                .refreshToken(token.getRefreshToken())
+                .build();
+
+        ApiResponse apiResponse = ApiResponse.builder()
+                .check(true)
+                .information(authResponse).build();
+
+        return ResponseEntity.ok(apiResponse);
+    }
+
 }
