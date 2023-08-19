@@ -9,12 +9,12 @@ public class MenuDetailRes {
 
     private Long id;
     private String name;
-    private Integer price;
+    private String price;
     private String description;
     private String imageUrl;
 
     @Builder
-    public MenuDetailRes(Long id, String name, Integer price, String description, String imageUrl) {
+    public MenuDetailRes(Long id, String name, String price, String description, String imageUrl) {
         this.id = id;
         this.name = name;
         this.price = price;
