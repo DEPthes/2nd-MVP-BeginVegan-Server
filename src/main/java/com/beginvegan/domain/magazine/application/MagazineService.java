@@ -70,7 +70,6 @@ public class MagazineService {
                 .map(block -> BlockDto.builder()
                         .content(block.getContent())
                         .sequence(block.getSequence())
-                        .blockType(block.getBlockType())
                         .build())
                 .collect(Collectors.toList());
 

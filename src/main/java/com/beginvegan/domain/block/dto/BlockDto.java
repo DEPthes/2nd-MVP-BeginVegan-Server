@@ -1,6 +1,5 @@
 package com.beginvegan.domain.block.dto;
 
-import com.beginvegan.domain.block.domain.BlockType;
 import lombok.Builder;
 import lombok.Data;
 
@@ -11,12 +10,9 @@ public class BlockDto {
 
     private Integer sequence;
 
-    private BlockType blockType;
-
     @Builder
-    public BlockDto(Long id, String content, Integer sequence, BlockType blockType) {
+    public BlockDto(Long id, String content, Integer sequence) {
         this.content = content;
         this.sequence = sequence;
-        this.blockType = blockType;
     }
 }
