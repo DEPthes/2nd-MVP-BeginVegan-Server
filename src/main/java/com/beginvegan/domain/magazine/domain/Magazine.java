@@ -25,6 +25,7 @@ public class Magazine extends BaseEntity {
 
     private String source;
 
+    @Enumerated(EnumType.STRING)
     private MagazineType magazineType;
 
     @OneToMany(mappedBy = "magazine")
