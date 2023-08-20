@@ -177,6 +177,8 @@ public class RestaurantService {
                             .name(nearRestaurant.getName())
                             .businessHours(nearRestaurant.getBusinessHours())
                             .address(nearRestaurant.getAddress())
+                            .latitude(nearRestaurant.getLatitude())
+                            .longitude(nearRestaurant.getLongitude())
                             .imageUrl(nearRestaurant.getImageUrl())
                             .menus(menuDtos)
                             .build();
