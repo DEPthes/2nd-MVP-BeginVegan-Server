@@ -74,6 +74,7 @@ public class FoodService {
                         .content(block.getContent())
                         .sequence(block.getSequence())
                         .build())
+                .sorted(Comparator.comparing(BlockDto::getSequence))
                 .collect(Collectors.toList());
 
         FoodDetailRes foodDetailRes = FoodDetailRes.builder()
