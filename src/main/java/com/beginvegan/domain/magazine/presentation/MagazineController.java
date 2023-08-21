@@ -41,8 +41,8 @@ public class MagazineController {
             @ApiResponse(responseCode = "400", description = "매거진 상세 정보 조회 실패", content = { @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class) ) } ),
     })
     @PostMapping("/magazine-detail")
-    public ResponseEntity<?> findMagazinedetail(@RequestBody MagazineDetailReq magazineDetailReq) {
-        return magazineService.findMagazinedetail(magazineDetailReq);
+    public ResponseEntity<?> findMagazineDetail(@RequestBody MagazineDetailReq magazineDetailReq) {
+        return magazineService.findMagazineDetail(magazineDetailReq);
     }
 
 }
