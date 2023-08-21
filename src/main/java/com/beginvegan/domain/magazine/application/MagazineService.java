@@ -63,7 +63,7 @@ public class MagazineService {
 
     // 매거진 상세 조회 : id를 통해 조회
     public ResponseEntity<?> findMagazinedetail(MagazineDetailReq magazineDetailReq) {
-        Optional<Magazine> magazineOptional = magazineRepository.findById(magazineDetailReq.getId());
+        Optional<Magazine> magazineOptional = magazineRepository.findMagazineById(magazineDetailReq.getId());
         Magazine magazine = magazineOptional.orElseThrow(() -> new MagazineNotFoundException("해당 아이디를 가진 매거진을 찾을 수 없습니다. ID: " + magazineDetailReq.getId()));
 
         List<BlockDto> blockDtos = magazine.getMagazineBlocks().stream()
