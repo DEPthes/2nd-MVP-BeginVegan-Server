@@ -2,6 +2,7 @@ package com.beginvegan.domain.restaurant.dto;
 
 import com.beginvegan.domain.restaurant.domain.Address;
 import com.beginvegan.domain.restaurant.domain.Restaurant;
+import com.beginvegan.domain.restaurant.domain.RestaurantType;
 import lombok.Builder;
 import lombok.Data;
 
@@ -18,9 +19,10 @@ public class RestaurantDetailRes {
     private String kakaoMapUrl;
     private String imageUrl;
     private String imageSource;
+    private RestaurantType restaurantType;
 
     @Builder
-    public RestaurantDetailRes(Long id, String name, String businessHours, String contactNumber, Address address, String latitude, String longitude, String kakaoMapUrl, String imageUrl, String imageSource) {
+    public RestaurantDetailRes(Long id, String name, String businessHours, String contactNumber, Address address, String latitude, String longitude, String kakaoMapUrl, String imageUrl, String imageSource, RestaurantType restaurantType) {
         this.id = id;
         this.name = name;
         this.businessHours = businessHours;
@@ -31,6 +33,7 @@ public class RestaurantDetailRes {
         this.kakaoMapUrl = kakaoMapUrl;
         this.imageUrl = imageUrl;
         this.imageSource = imageSource;
+        this.restaurantType = restaurantType;
     }
 
     public static RestaurantDetailRes toDto(Restaurant restaurant) {
@@ -45,6 +48,7 @@ public class RestaurantDetailRes {
                 .kakaoMapUrl(restaurant.getKakaoMapUrl())
                 .imageUrl(restaurant.getImageUrl())
                 .imageSource(restaurant.getImageSource())
+                .restaurantType(restaurant.getRestaurantType())
                 .build();
     }
 
