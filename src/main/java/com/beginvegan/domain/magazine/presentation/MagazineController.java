@@ -29,7 +29,7 @@ public class MagazineController {
             @ApiResponse(responseCode = "200", description = "2가지 매거진 목록 조회 성공", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = MagazineListRes.class)) } ),
             @ApiResponse(responseCode = "400", description = "2가지 매거진 목록 조회 실패", content = { @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class) ) } ),
     })
-    @GetMapping("/random-megazine-list")
+    @GetMapping("/random-magazine-list")
     public ResponseEntity<?> findTwoMagazines(){
         return magazineService.findTwoMagazines();
     }
