@@ -56,6 +56,7 @@ public class ReviewService {
 
         ReviewListRes reviewListRes = ReviewListRes.builder()
                 .reviews(reviewDetailResList)
+                .totalCount(reviewPage.getTotalElements())
                 .build();
 
         ApiResponse apiResponse = ApiResponse.builder()

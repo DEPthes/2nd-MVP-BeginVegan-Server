@@ -41,6 +41,7 @@ public class BookmarkService {
 
         BookmarkListRes bookmarkListRes = BookmarkListRes.builder()
                 .restaurants(restaurants)
+                .totalCount(bookmarkPage.getTotalElements())
                 .build();
 
         ApiResponse apiResponse = ApiResponse.builder()

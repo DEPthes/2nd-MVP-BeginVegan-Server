@@ -8,11 +8,13 @@ import java.util.List;
 @Data
 public class ReviewListRes {
 
-    List<?> reviews;
+    private List<?> reviews;
+    private Long totalCount;
 
     @Builder
-    public ReviewListRes(List<?> reviews) {
+    public ReviewListRes(List<?> reviews, Long totalCount) {
         this.reviews = reviews;
+        this.totalCount = totalCount;
     }
 
 }
