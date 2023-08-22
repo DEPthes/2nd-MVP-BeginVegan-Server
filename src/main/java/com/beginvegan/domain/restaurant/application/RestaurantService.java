@@ -79,6 +79,7 @@ public class RestaurantService {
 
         ReviewListRes reviewListRes = ReviewListRes.builder()
                 .reviews(reviewDetailRes)
+                .totalCount(reviewPage.getTotalElements())
                 .build();
 
         ApiResponse apiResponse = ApiResponse.builder()
